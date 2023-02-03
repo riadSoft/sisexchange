@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="612" pageHeight="792" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ede00712-617c-4d12-99c2-45608ff71a4d">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/rolomen/NetBeansProjects/SIS_EXCHANGE/src/Reportes/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pIdCaja" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pFecha" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select m.nom_moneda as MONEDA,
+c.tipo as TIPO,
+c.cotizacion as TC_TRANSACCION,
+tipoCambio(c.tipo,c.MC_MONEDA_ID_MONEDA) as TC_ORIGEN,
+sum(c.importe) as Importe,
+round(abs((c.cotizacion-tipoCambio(c.tipo,c.MC_MONEDA_ID_MONEDA))*sum(c.importe)),4) as UTILIDAD
+from MC_MOVIMIENTO c, MC_MONEDA m
+WHERE c.MC_MONEDA_ID_MONEDA = m.ID_MONEDA and
+DATE(FECHA) = $P{pFecha} and
+MC_CAJA_ID_CAJA = $P{pIdCaja}
+group by c.cotizacion,c.tipo,c.MC_MONEDA_ID_MONEDA
+order by c.cotizacion]]>
+	</queryString>
+	<field name="MONEDA" class="java.lang.String"/>
+	<field name="TIPO" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="TC_TRANSACCION" class="java.math.BigDecimal"/>
+	<field name="TC_ORIGEN" class="java.math.BigDecimal"/>
+	<field name="Importe" class="java.math.BigDecimal"/>
+	<field name="UTILIDAD" class="java.math.BigDecimal"/>
+	<variable name="varsuma" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[( $F{MONEDA}.equals("DOLAR")? $F{UTILIDAD} : 0.0 )]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="52" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="16" width="572" height="20" uuid="9c25beea-3153-44c2-b4d6-19ea8d166315"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UTILIDAD DEL DIA]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="50" splitType="Stretch">
+			<staticText>
+				<reportElement x="22" y="5" width="100" height="20" uuid="1991899a-019c-4ab2-8f6a-d768d7edae18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CAJA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="22" y="25" width="100" height="20" uuid="8d86082e-865d-42cd-8d08-1746d634f005"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="122" y="5" width="100" height="20" uuid="e1b8d751-a52f-40a5-8d05-bd08fdc431ff"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{pIdCaja}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="122" y="25" width="100" height="20" uuid="d62140e0-1a1d-4d7d-a472-e638bd7a603c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{pFecha}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="17" splitType="Stretch">
+			<rectangle radius="10">
+				<reportElement x="43" y="0" width="502" height="15" uuid="0c9917c8-1590-4c5f-ad53-6dcabdaef7e3"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="53" y="0" width="100" height="15" uuid="5d3017ce-f3a3-4d8c-9f66-a7f8607f76cd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[MONEDA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="153" y="0" width="69" height="15" uuid="cc260859-bf93-49c9-87f4-abab4e366f3d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TC_TRANSACCION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="222" y="0" width="100" height="15" uuid="2e6f89f0-1fa5-497c-a872-2d0b66d839ce"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TC_ORIGEN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="322" y="0" width="100" height="15" uuid="162eaa94-6a5a-4d0f-b293-e02356ed0a43"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[IMPORTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="422" y="0" width="100" height="15" uuid="ebcfede4-393d-4e58-90bb-6a7f74f94e2d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[UTILIDAD]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="18" splitType="Stretch">
+			<textField>
+				<reportElement x="53" y="0" width="100" height="14" uuid="3053c4aa-16a9-47ae-b81b-98f1a5e8b533"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{MONEDA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.0000">
+				<reportElement x="153" y="0" width="69" height="14" uuid="ac86c5f5-9adc-4671-88f8-5288e8588116"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TC_TRANSACCION}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.0000">
+				<reportElement x="222" y="0" width="100" height="14" uuid="7033f498-6b91-4ee7-98c6-e0ca4086e256"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TC_ORIGEN}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="322" y="0" width="100" height="14" uuid="d9dd36a1-951b-4f6b-8bd3-58c618289b97"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Importe}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="422" y="0" width="100" height="14" uuid="28d89c65-31f5-46f4-9e0e-1f9f4b2530d4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{UTILIDAD}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="32">
+			<rectangle radius="10">
+				<reportElement x="307" y="6" width="236" height="20" uuid="6f498158-c1ae-486b-8e6f-1c3cf41786c4"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="322" y="6" width="100" height="20" uuid="5a25e86d-8621-499d-9037-56cb70c781e5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="422" y="6" width="100" height="20" uuid="bbfe1349-89e1-4ca2-8640-8c617a3feea8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{varsuma}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ecb193df-9edc-4ec2-a8c8-8acf8c83c340">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#E6F3FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="DataSet" uuid="2e589086-f59b-48a1-921f-fefbc1934103"/>
+	<parameter name="pFecha" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pSucursal" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pCaja" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pTipo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pTituloOperacion" class="java.lang.String"/>
+	<parameter name="pTituloSucursal" class="java.lang.String"/>
+	<parameter name="pTituloCaja" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT 
+m.NRO_OPER,date(m.FECHA) as FECHA, time(m.FECHA) as HORA,m.IMPORTE,m.COTIZACION, d.NOM_MONEDA, (m.IMPORTE*m.COTIZACION) as TOTAL
+FROM
+	MC_MOVIMIENTO m
+		INNER JOIN
+	MC_MONEDA d ON m.MC_MONEDA_ID_MONEDA = d.ID_MONEDA
+WHERE date(m.FECHA) = $P{pFecha} AND m.TIPO = $P{pTipo} AND m.MC_SUCURSAL_ID_SUCURSAL = $P{pSucursal} AND m.MC_CAJA_ID_CAJA= $P{pCaja}
+ORDER BY m.FECHA ASC]]>
+	</queryString>
+	<field name="NRO_OPER" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="FECHA" class="java.sql.Date"/>
+	<field name="HORA" class="java.sql.Time"/>
+	<field name="IMPORTE" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="COTIZACION" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="NOM_MONEDA" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="TOTAL" class="java.lang.Double"/>
+	<variable name="vSumImporte" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{IMPORTE}]]></variableExpression>
+	</variable>
+	<variable name="vSumSaldo" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{TOTAL}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="99" splitType="Stretch">
+			<staticText>
+				<reportElement x="208" y="25" width="337" height="20" uuid="9305d652-b6fd-476d-b028-fcb4072fa717"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MONEDA EXTRANGERA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="35" y="53" width="100" height="20" uuid="da77f495-6388-4b58-aa33-26d892ffda72"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Sucursal:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="492" y="53" width="100" height="20" uuid="a13f2e9e-5f4a-45bc-9c41-38b2fa445c3e"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Caja:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="35" y="73" width="100" height="20" uuid="dabac650-6ab3-42fd-ae74-af24737d650d"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="146" y="73" width="446" height="20" uuid="549d88cd-00cc-4e1e-8b90-f6dbc4be91f8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{FECHA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="326" y="6" width="100" height="20" uuid="ecd7ce0b-deeb-460a-a16a-e8fc39163e01"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{pTituloOperacion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="146" y="53" width="100" height="20" uuid="f537a1ec-a8d7-40c1-8a6c-b25bb99c49d1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{pTituloSucursal}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="614" y="53" width="100" height="20" uuid="e6abce91-5074-45ff-afbd-6a94d46256af"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{pTituloCaja}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="31" splitType="Stretch">
+			<rectangle radius="10">
+				<reportElement x="0" y="7" width="752" height="20" uuid="cc7c9a0d-0a2c-4237-8b6e-0f05e0d52ed5"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="20" y="7" width="100" height="20" forecolor="#333333" uuid="dd13138e-13e6-468e-bea4-2db6028bf0dc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[No Operacion]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="135" y="7" width="100" height="20" forecolor="#333333" uuid="0051d6db-f667-4ff0-885f-5f355b87cd62"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Hora Transaccion]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="249" y="7" width="107" height="20" forecolor="#333333" uuid="0a7a8cf7-3aa8-43c8-aeee-7b5d69b5f734"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Moneda]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="376" y="7" width="105" height="20" forecolor="#333333" uuid="cc1a19f9-994b-4793-894f-2496b458a642"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Importe]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="500" y="7" width="96" height="20" forecolor="#333333" uuid="2ed18c8b-9cb2-42a4-ac42-6dc3a93c13c0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Tipo de cambio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="614" y="7" width="110" height="20" forecolor="#333333" uuid="e2a2b774-5558-4658-8cc0-d58881361b0a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Saldo]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="28" splitType="Stretch">
+			<textField>
+				<reportElement x="20" y="0" width="100" height="20" uuid="a41bd9ae-9617-4c11-8628-11172c466be1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NRO_OPER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH.mm">
+				<reportElement x="135" y="0" width="100" height="20" uuid="6938a1ed-cd23-4acd-900e-4af4434d2b7c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{HORA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement x="249" y="0" width="107" height="20" uuid="26ab13f6-bf03-4c8e-a957-0dc057d93f1c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{NOM_MONEDA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="376" y="0" width="105" height="20" uuid="d01af661-1355-4d24-9585-ad01b9597c25"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{IMPORTE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.000">
+				<reportElement x="500" y="0" width="96" height="20" uuid="ad86193e-64b3-4f08-adfb-1a32298e3c72"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{COTIZACION}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="614" y="0" width="110" height="20" uuid="94b59439-472b-4f10-a846-1e5393b73e2c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TOTAL}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="42" splitType="Stretch">
+			<staticText>
+				<reportElement x="256" y="5" width="100" height="20" backcolor="#999999" uuid="1f77eccd-273e-44ce-9187-52aad6cc7d53"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="11" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<elementGroup>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement x="376" y="3" width="105" height="20" uuid="81e8dbd9-d73a-4caf-9df0-b6954e663db0"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="true" isItalic="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{vSumImporte}]]></textFieldExpression>
+				</textField>
+			</elementGroup>
+			<line>
+				<reportElement x="0" y="3" width="752" height="1" uuid="d43937a3-3b5d-4fcc-8dcd-4cba795030ec"/>
+				<graphicElement>
+					<pen lineWidth="1.25" lineStyle="Double"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="376" y="24" width="376" height="1" uuid="68f7f6de-5795-4675-a787-fc824f4da345"/>
+			</line>
+			<textField pattern="#,##0.00">
+				<reportElement x="614" y="5" width="110" height="20" uuid="13737459-367b-42ea-b819-fb6197b57093"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{vSumSaldo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

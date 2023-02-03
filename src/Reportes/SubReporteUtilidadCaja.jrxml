@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="282" pageHeight="113" columnWidth="282" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="97ef2c6b-c726-40c9-af6d-1356fa27dc84">
+	<property name="ireport.zoom" value="4.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="pidCaja" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pFecha" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT DATE(l.FECHA_INICIO) AS FECHA, m.NOM_MONEDA as MONEDA, l.SALDO_INI,l.SALDO_FIN,m.COMPRA as TC,
+ROUND((l.SALDO_FIN*m.COMPRA),2) AS SALDO_BS,l.ID_CAJA
+FROM MC_MONEDA m JOIN LOG_SALDOS l ON m.ID_MONEDA = l.ID_MONEDA
+WHERE ID_CAJA = $P{pidCaja} AND DATE(l.FECHA_INICIO)=$P{pFecha}
+ORDER BY l.FECHA_INICIO,m.NOM_MONEDA;]]>
+	</queryString>
+	<field name="FECHA" class="java.sql.Date"/>
+	<field name="MONEDA" class="java.lang.String"/>
+	<field name="SALDO_INI" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="SALDO_FIN" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="TC" class="java.lang.Float"/>
+	<field name="SALDO_BS" class="java.lang.Double"/>
+	<field name="ID_CAJA" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="vTotal" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{SALDO_BS}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="13" splitType="Stretch">
+			<rectangle radius="10">
+				<reportElement x="0" y="0" width="283" height="13" uuid="04f5c683-6bb5-4a8b-854a-c816d0d582be"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="2" y="0" width="74" height="13" uuid="176cc26a-11a5-4469-a289-71feb426439c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MONEDA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="76" y="0" width="55" height="13" uuid="799411f4-3129-4627-91fd-84af54e35221"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SALDO INICIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="140" y="0" width="51" height="13" uuid="a6532e9a-2bad-4686-88c9-efccee08cc63"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SALDO FIN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="190" y="0" width="29" height="13" uuid="959da1a9-29c4-470d-addb-208c5a16caf4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[T/C]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="218" y="0" width="50" height="13" uuid="a0da9269-7dab-404e-949d-8922430ccce2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BS]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="11" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="283" height="11" uuid="4a0385f0-7826-4c8f-b20f-eb30594b81b0"/>
+			</rectangle>
+			<textField>
+				<reportElement x="2" y="0" width="74" height="11" uuid="f2d32420-0d63-4258-8384-a292dfdd8e40"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MONEDA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="76" y="0" width="55" height="11" forecolor="#FF0000" uuid="5c4d45f2-e26f-4102-a750-462d59a03be8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SALDO_INI}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="140" y="0" width="51" height="11" uuid="0154e465-541d-4a0f-9b22-b5f40fa28097"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SALDO_FIN}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.000">
+				<reportElement x="190" y="0" width="29" height="11" uuid="81c4773e-bb14-4cae-8995-8e897911a07c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TC}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="218" y="0" width="50" height="11" uuid="e397c956-22cc-489b-8219-719fbf3c5e80"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SALDO_BS}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="136" y="0" width="1" height="11" uuid="c5092dba-716d-4dc6-b55a-918560beb275"/>
+			</line>
+		</band>
+	</detail>
+	<summary>
+		<band height="11" splitType="Stretch">
+			<rectangle>
+				<reportElement x="136" y="0" width="147" height="10" uuid="678bc525-d6aa-4423-b3e6-20bb80530f30"/>
+			</rectangle>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="191" y="1" width="77" height="9" uuid="e72d54e9-5818-4d13-b30b-de79c8447c57"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{vTotal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="160" y="1" width="29" height="9" uuid="047399ba-8ab6-465c-9271-8ca46395b8e1"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>
